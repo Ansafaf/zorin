@@ -24,5 +24,6 @@ router.get('/payment/gateway', shopController.getPaymentGateway);
 router.get('/payment/status', shopController.getPaymentStatus);
 router.get('/payment/success', shopController.getPaymentSuccess);
 router.get('/payment/failure', shopController.getPaymentFailure);
+router.post('/payment/webhook', shopController.postWebhook);
 
 module.exports = router;

@@ -148,9 +148,9 @@ exports.postCartDeleteProduct = (req, res) => {
 };
 
 exports.getCheckout = (req, res) => {
-    if (!req.session.cart || req.session.cart.items.length === 0) {
-        return res.redirect('/cart');
-    }
+    // if (!req.session.cart || req.session.cart.items.length === 0) {
+    //     return res.redirect('/cart');
+    // }
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
         layout: 'layouts/main-layout'
