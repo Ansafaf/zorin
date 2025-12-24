@@ -47,6 +47,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Global Variables Middleware (for flash messages, user session in views)
 app.use((req, res, next) => {
+    console.log(`DEBUG: Middleware [${req.method} ${req.url}] Session ID: ${req.session.id}`);
     res.locals.isAdmin = req.session.isAdmin || false;
     res.locals.cart = req.session.cart || { items: [], totalQty: 0, totalPrice: 0 };
     next();

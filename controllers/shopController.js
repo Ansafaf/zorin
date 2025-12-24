@@ -107,6 +107,7 @@ exports.postCart = async (req, res) => {
         cart.totalPrice += product.price * quantity;
 
         req.session.cart = cart;
+        console.log(`DEBUG: postCart Session ID: ${req.session.id}`);
         console.log('DEBUG: Saving cart to session:', JSON.stringify(cart, null, 2));
 
         req.session.save(err => {
