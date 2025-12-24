@@ -71,6 +71,7 @@ exports.getProduct = async (req, res) => {
 };
 
 exports.getCart = (req, res) => {
+    console.log('DEBUG: getCart session:', JSON.stringify(req.session.cart, null, 2));
     res.render('shop/cart', {
         pageTitle: 'Your Cart',
         layout: 'layouts/main-layout'
@@ -106,13 +107,18 @@ exports.postCart = async (req, res) => {
         cart.totalPrice += product.price * quantity;
 
         req.session.cart = cart;
+        console.log('DEBUG: Saving cart to session:', JSON.stringify(cart, null, 2));
+
         req.session.save(err => {
             if (err) {
-                console.log(err);
+                console.error('DEBUG: Session save error:', err);
+            } else {
+                console.log('DEBUG: Session saved successfully. Redirecting to /cart...');
             }
             res.redirect('/cart');
         });
     } catch (err) {
+        console.error('DEBUG: postCart error:', err);
         console.log(err);
         res.redirect('/');
     }
