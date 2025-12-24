@@ -209,7 +209,7 @@ exports.postOrder = async (req, res) => {
                 // We will force 'https' here. Note that on localhost without SSL, 
                 // the return redirection might fail in browser with SSL error.
                 // Use ngrok for proper testing or ignore browser SSL warning if possible.
-                return_url: `https://${req.get('host')}/payment/status?order_id={order_id}`
+                return_url: `${isProd ? 'https' : req.protocol}://${req.get('host')}/payment/status?order_id={order_id}`
             }
         };
 
