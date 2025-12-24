@@ -26,6 +26,33 @@ exports.getAbout = (req, res) => {
     });
 };
 
+exports.getTerms = (req, res) => {
+    res.render('shop/terms', {
+        pageTitle: 'Terms & Conditions',
+        layout: 'layouts/main-layout'
+    });
+};
+
+exports.getRefund = (req, res) => {
+    res.render('shop/refund', {
+        pageTitle: 'Refund Policy',
+        layout: 'layouts/main-layout'
+    });
+};
+
+exports.getContact = (req, res) => {
+    res.render('shop/contact', {
+        pageTitle: 'Contact Us',
+        layout: 'layouts/main-layout'
+    });
+};
+
+exports.postContact = (req, res) => {
+    // Dummy logic for contact form submission
+    console.log(req.body);
+    res.redirect('/contact');
+};
+
 exports.getProduct = async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
@@ -61,7 +88,7 @@ exports.postCart = async (req, res) => {
         }
 
         const cart = req.session.cart || { items: [], totalQty: 0, totalPrice: 0 };
-        const existingItemIndex = cart.items.findIndex(p => p.productId == productId);
+        const existingItemIndex = cart.items.findIndex(p => p.productId.toString() === productId.toString());
 
         if (existingItemIndex >= 0) {
             cart.items[existingItemIndex].quantity += quantity;
@@ -79,7 +106,12 @@ exports.postCart = async (req, res) => {
         cart.totalPrice += product.price * quantity;
 
         req.session.cart = cart;
-        res.redirect('/cart');
+        req.session.save(err => {
+            if (err) {
+                console.log(err);
+            }
+            res.redirect('/cart');
+        });
     } catch (err) {
         console.log(err);
         res.redirect('/');
@@ -99,8 +131,13 @@ exports.postCartDeleteProduct = (req, res) => {
             cart.items.splice(itemIndex, 1);
         }
         req.session.cart = cart;
+        req.session.save(err => {
+            if (err) console.log(err);
+            res.redirect('/cart');
+        });
+    } else {
+        res.redirect('/cart');
     }
-    res.redirect('/cart');
 };
 
 exports.getCheckout = (req, res) => {
@@ -115,12 +152,13 @@ exports.getCheckout = (req, res) => {
 
 const Order = require('../models/Order');
 
+const axios = require('axios');
+
 exports.postOrder = async (req, res) => {
     if (!req.session.cart || req.session.cart.items.length === 0) {
         return res.redirect('/cart');
     }
 
-    // In a real app, validation goes here
     const {
         name, email, phone,
         street, city, state, pincode, country
@@ -146,22 +184,105 @@ exports.postOrder = async (req, res) => {
         // Clear cart
         req.session.cart = null;
 
-        // Redirect to a mock payment page or success
-        // Simulating Payment Gateway Redirect
-        res.redirect(`/payment/gateway?orderId=${savedOrder._id}`);
+        // Cashfree Integration
+        const isProd = process.env.CASHFREE_ENV === 'PROD';
+        const baseUrl = isProd ? 'https://api.cashfree.com/pg' : 'https://sandbox.cashfree.com/pg';
+
+        const payload = {
+            order_id: savedOrder._id.toString(),
+            order_amount: savedOrder.totalAmount,
+            order_currency: 'INR',
+            customer_details: {
+                customer_id: savedOrder.customer.email.replace(/[^a-zA-Z0-9]/g, '').substring(0, 40) || 'guest_' + Date.now(),
+                customer_email: savedOrder.customer.email,
+                customer_phone: savedOrder.customer.phone
+            },
+            order_meta: {
+                // Cashfree requires https, even for sandbox.
+                // We will force 'https' here. Note that on localhost without SSL, 
+                // the return redirection might fail in browser with SSL error.
+                // Use ngrok for proper testing or ignore browser SSL warning if possible.
+                return_url: `https://${req.get('host')}/payment/status?order_id={order_id}`
+            }
+        };
+
+        const headers = {
+            'x-client-id': process.env.CASHFREE_APP_ID,
+            'x-client-secret': process.env.CASHFREE_SECRET_KEY,
+            'x-api-version': '2023-08-01',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await axios.post(`${baseUrl}/orders`, payload, { headers });
+
+        if (response.data && response.data.payment_session_id) {
+            // Redirect to a page where we can initiate the payment sdk or redirect to payment link
+            // For simplicity, we might redirect to payment_link if available, or render a page with checkout sdk
+            // The API usually returns payment_session_id. 
+            // To simplify, let's use the 'payment_link' if available (only older versions) or fallback to rendering a payment page.
+            // Actually, the best way for web is to use the JS SDK on frontend. 
+            // But user asked to "config payment system". 
+            // Let's pass the payment_session_id to the payment gateway page.
+            res.redirect(`/payment/gateway?order_id=${savedOrder._id}&payment_session_id=${response.data.payment_session_id}`);
+        } else {
+            console.error('Cashfree Error:', response.data);
+            res.redirect('/checkout?error=payment_initiation_failed');
+        }
+
     } catch (err) {
-        console.log(err);
-        res.redirect('/checkout');
+        console.log(err.response ? err.response.data : err);
+        res.redirect('/checkout?error=payment_error');
     }
 };
 
 exports.getPaymentGateway = (req, res) => {
-    // Mock Payment Page
+    // Render the payment page with Cashfree SDK
     res.render('shop/payment', {
         pageTitle: 'Payment Gateway',
         layout: 'layouts/main-layout',
-        orderId: req.query.orderId
+        orderId: req.query.order_id,
+        paymentSessionId: req.query.payment_session_id,
+        isProd: process.env.CASHFREE_ENV === 'PROD'
     });
+};
+
+exports.getPaymentStatus = async (req, res) => {
+    try {
+        const orderId = req.query.order_id;
+        const isProd = process.env.CASHFREE_ENV === 'PROD';
+        const baseUrl = isProd ? 'https://api.cashfree.com/pg' : 'https://sandbox.cashfree.com/pg';
+
+        const headers = {
+            'x-client-id': process.env.CASHFREE_APP_ID,
+            'x-client-secret': process.env.CASHFREE_SECRET_KEY,
+            'x-api-version': '2023-08-01',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await axios.get(`${baseUrl}/orders/${orderId}`, { headers });
+        const orderData = response.data;
+
+        const order = await Order.findById(orderId);
+
+        if (orderData.order_status === 'PAID') {
+            if (order) {
+                order.status = 'Paid';
+                order.paymentId = orderData.cf_order_id; // or payment id
+                await order.save();
+            }
+            res.redirect('/payment/success?orderId=' + orderId);
+        } else {
+            if (order) {
+                order.status = 'Failed';
+                await order.save();
+            }
+            res.redirect('/payment/failure?orderId=' + orderId);
+        }
+
+    } catch (err) {
+        console.error(err);
+        res.redirect('/');
+    }
 };
 
 exports.getPaymentSuccess = async (req, res) => {

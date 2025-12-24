@@ -16,17 +16,32 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Session Configuration
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const store = new MongoDBStore({
+    uri: process.env.MONGO_URI,
+    collection: 'sessions'
+});
+
+store.on('error', function (error) {
+    console.log('Session Store Error:', error);
+});
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false, // Don't create session until something stored
+    store: store, // Use MongoDB Store
     cookie: {
         secure: false, // Set to true in production with HTTPS
-        maxAge: 1000 * 60 * 60 * 24 // 1 day
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
     }
 }));
 
 // View Engine
+const expressLayouts = require('express-ejs-layouts');
+app.use(expressLayouts);
+app.set('layout', 'layouts/main-layout'); // Set default layout
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 

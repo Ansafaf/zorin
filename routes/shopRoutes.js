@@ -4,6 +4,10 @@ const shopController = require('../controllers/shopController');
 
 router.get('/', shopController.getIndex);
 router.get('/about', shopController.getAbout);
+router.get('/terms', shopController.getTerms);
+router.get('/refund', shopController.getRefund);
+router.get('/contact', shopController.getContact);
+router.post('/contact', shopController.postContact);
 router.get('/product/:id', shopController.getProduct);
 
 // Cart
@@ -15,8 +19,9 @@ router.post('/cart/delete-item', shopController.postCartDeleteProduct);
 router.get('/checkout', shopController.getCheckout);
 router.post('/create-order', shopController.postOrder);
 
-// Payment (Mock)
+// Payment
 router.get('/payment/gateway', shopController.getPaymentGateway);
+router.get('/payment/status', shopController.getPaymentStatus);
 router.get('/payment/success', shopController.getPaymentSuccess);
 router.get('/payment/failure', shopController.getPaymentFailure);
 

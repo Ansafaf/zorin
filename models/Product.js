@@ -19,6 +19,18 @@ const productSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    brand: {
+        type: String,
+        trim: true
+    },
+    sku: {
+        type: String,
+        trim: true
+    },
+    originalPrice: {
+        type: Number,
+        min: 0
+    },
     images: [{
         type: String // Store paths to images
     }],

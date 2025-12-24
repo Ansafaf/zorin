@@ -600,7 +600,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="stat-value">$<% const totalRevenue=products.reduce((sum, product)=> {
+                <div class="stat-value">₹<% const totalRevenue=products.reduce((sum, product)=> {
                         // Assuming each product has sold 3 units for demo
                         return sum + (product.price * 3);
                         }, 0);
@@ -655,89 +655,88 @@
                                         <% if (product.images && product.images.length> 0) { %>
                                             <div class="product-image">
                                                 <img src="/uploads/<%= product.images[0] %>" alt="<%= product.name %>"
-                                                    onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\"
-                                                    no-image\"><i class=\"fas fa-image\"></i>
-                                            </div>';">
+                                                    onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'no-image\'><i class=\'fas fa-image\'></i></div>';">
+                                            </div>
+                                            <% } else { %>
+                                                <div class="no-image">
+                                                    <i class="fas fa-image"></i>
+                                                </div>
+                                                <% } %>
+                                    </td>
+                                    <td>
+                                        <div class="product-name">
+                                            <%= product.name %>
+                                        </div>
+                                        <% if (product.sku) { %>
+                                            <div style="font-size: 0.85rem; color: var(--gray-medium);">
+                                                SKU: <%= product.sku %>
+                                            </div>
+                                            <% } %>
+                                    </td>
+                                    <td class="product-price">₹<%= product.price %>
+                                    </td>
+                                    <td>
+                                        <span class="product-category">
+                                            <%= product.category || 'Uncategorized' %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="product-status"
+                                            style="display: inline-block; padding: 6px 12px; background: rgba(16, 185, 129, 0.1); color: var(--success-color); border-radius: 20px; font-size: 0.85rem; font-weight: 500;">
+                                            Active
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <a href="/admin/edit-product/<%= product._id %>"
+                                                class="btn btn-sm btn-edit">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </a>
+                                            <form action="/admin/delete-product/<%= product._id %>" method="POST"
+                                                style="display: inline;"
+                                                onsubmit="return confirmDelete(event, '<%= product.name %>')">
+                                                <button type="submit" class="btn btn-sm btn-delete">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div style="color: var(--gray-medium);">
+                        Showing <%= products.length %> of <%= products.length %> products
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-secondary" style="padding: 8px 16px;">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-primary" style="padding: 8px 16px;">1</button>
+                        <button class="btn btn-secondary" style="padding: 8px 16px;">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
                 <% } else { %>
-                    <div class="no-image">
-                        <i class="fas fa-image"></i>
+                    <div class="empty-state">
+                        <i class="fas fa-box-open"></i>
+                        <h3>No Products Found</h3>
+                        <p>Get started by adding your first product to the store.</p>
+                        <a href="/admin/add-product" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i>
+                            Add Your First Product
+                        </a>
                     </div>
                     <% } %>
-                        </td>
-                        <td>
-                            <div class="product-name">
-                                <%= product.name %>
-                            </div>
-                            <% if (product.sku) { %>
-                                <div style="font-size: 0.85rem; color: var(--gray-medium);">
-                                    SKU: <%= product.sku %>
-                                </div>
-                                <% } %>
-                        </td>
-                        <td class="product-price">$<%= product.price %>
-                        </td>
-                        <td>
-                            <span class="product-category">
-                                <%= product.category || 'Uncategorized' %>
-                            </span>
-                        </td>
-                        <td>
-                            <span class="product-status"
-                                style="display: inline-block; padding: 6px 12px; background: rgba(16, 185, 129, 0.1); color: var(--success-color); border-radius: 20px; font-size: 0.85rem; font-weight: 500;">
-                                Active
-                            </span>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="/admin/edit-product/<%= product._id %>" class="btn btn-sm btn-edit">
-                                    <i class="fas fa-edit"></i>
-                                    Edit
-                                </a>
-                                <form action="/admin/delete-product/<%= product._id %>" method="POST"
-                                    style="display: inline;"
-                                    onsubmit="return confirmDelete(event, '<%= product.name %>')">
-                                    <button type="submit" class="btn btn-sm btn-delete">
-                                        <i class="fas fa-trash-alt"></i>
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                        </tr>
-                        <% }); %>
-                            </tbody>
-                            </table>
         </div>
-
-        <!-- Pagination -->
-        <div
-            style="display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
-            <div style="color: var(--gray-medium);">
-                Showing <%= products.length %> of <%= products.length %> products
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn btn-secondary" style="padding: 8px 16px;">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="btn btn-primary" style="padding: 8px 16px;">1</button>
-                <button class="btn btn-secondary" style="padding: 8px 16px;">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-        <% } else { %>
-            <div class="empty-state">
-                <i class="fas fa-box-open"></i>
-                <h3>No Products Found</h3>
-                <p>Get started by adding your first product to the store.</p>
-                <a href="/admin/add-product" class="btn btn-primary">
-                    <i class="fas fa-plus-circle"></i>
-                    Add Your First Product
-                </a>
-            </div>
-            <% } %>
-    </div>
     </div>
 
     <script>

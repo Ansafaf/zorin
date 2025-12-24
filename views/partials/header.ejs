@@ -9,7 +9,7 @@
 
     <div class="main-header">
         <div class="container">
-            <a href="/" class="brand-logo">Payment <span>World</span></a>
+            <a href="/" class="brand-logo">Zorin <span>Mobile Shop</span></a>
 
             <div class="search-bar-container">
                 <form action="/" method="GET">
@@ -24,17 +24,12 @@
                         <i>&#128100;</i> <!-- User Icon Unicode -->
                         <span>Admin</span>
                     </a>
-                    <% } else { %>
-                        <a href="/admin/login" class="header-icon-item">
-                            <i>&#128100;</i>
-                            <span>Login</span>
-                        </a>
-                        <% } %>
+                    <% } %>
 
-                            <a href="/cart" class="header-icon-item">
-                                <i>&#128722;</i> <!-- Cart Icon Unicode -->
-                                <span>Cart (<%= typeof cart !=='undefined' ? cart.totalQty : 0 %>)</span>
-                            </a>
+                        <a href="/cart" class="header-icon-item">
+                            <i>&#128722;</i> <!-- Cart Icon Unicode -->
+                            <span>Cart (<%= typeof cart !=='undefined' ? cart.totalQty : 0 %>)</span>
+                        </a>
             </div>
         </div>
     </div>
