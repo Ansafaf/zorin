@@ -332,3 +332,51 @@ exports.getPaymentFailure = async (req, res) => {
     }
 };
 
+exports.postWebhook = async (req, res) => {
+    try {
+        console.log('Webhook Received:', JSON.stringify(req.body));
+
+        // Cashfree payload structure varies, but we need order_id
+        // Usually req.body.data.order.order_id or req.body.orderId
+        const orderId = req.body.data?.order?.order_id || req.body.orderId;
+
+        if (!orderId) {
+            console.error('Webhook Error: No Order ID found in payload');
+            return res.status(400).send('Bad Request');
+        }
+
+        // Verify status from Cashfree API (Secure Fetcher Pattern)
+        const isProd = process.env.CASHFREE_ENV === 'PROD';
+        const baseUrl = isProd ? 'https://api.cashfree.com/pg' : 'https://sandbox.cashfree.com/pg';
+
+        const headers = {
+            'x-client-id': process.env.CASHFREE_APP_ID,
+            'x-client-secret': process.env.CASHFREE_SECRET_KEY,
+            'x-api-version': '2023-08-01'
+        };
+
+        const response = await axios.get(`${baseUrl}/orders/${orderId}`, { headers });
+        const orderStatus = response.data.order_status;
+
+        if (orderStatus === 'PAID') {
+            const order = await Order.findById(orderId);
+            if (order) {
+                if (order.status !== 'Completed') {
+                    order.status = 'Completed';
+                    order.paymentId = orderId; // Or specific payment ID if available
+                    await order.save();
+                    console.log(`Order ${orderId} marked as Completed via Webhook`);
+                } else {
+                    console.log(`Order ${orderId} already completed.`);
+                }
+            }
+        }
+
+        res.status(200).send('OK');
+
+    } catch (err) {
+        console.error('Webhook process failed:', err.message);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
