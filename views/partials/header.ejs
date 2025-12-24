@@ -1,0 +1,53 @@
+<header>
+    <div class="top-bar">
+        <div class="container">
+            <a href="#">Store Locator</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Track Order</a>
+        </div>
+    </div>
+
+    <div class="main-header">
+        <div class="container">
+            <a href="/" class="brand-logo">Payment <span>World</span></a>
+
+            <div class="search-bar-container">
+                <form action="/" method="GET">
+                    <input type="text" name="search" placeholder="Find what you're looking for...">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
+            <div class="header-icons">
+                <% if (typeof isAuthenticated !=='undefined' && isAuthenticated) { %>
+                    <a href="/admin/dashboard" class="header-icon-item">
+                        <i>&#128100;</i> <!-- User Icon Unicode -->
+                        <span>Admin</span>
+                    </a>
+                    <% } else { %>
+                        <a href="/admin/login" class="header-icon-item">
+                            <i>&#128100;</i>
+                            <span>Login</span>
+                        </a>
+                        <% } %>
+
+                            <a href="/cart" class="header-icon-item">
+                                <i>&#128722;</i> <!-- Cart Icon Unicode -->
+                                <span>Cart (<%= typeof cart !=='undefined' ? cart.totalQty : 0 %>)</span>
+                            </a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/">Mobiles</a></li>
+                <li><a href="/">Laptops</a></li>
+                <li><a href="/">Accessories</a></li>
+                <li><a href="/about">About Us</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>

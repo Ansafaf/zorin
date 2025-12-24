@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Zorin Mobile Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 60px auto;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .content {
+            padding: 60px 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .cta h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .cta p {
+            color: white;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tablet styles */
+        @media (max-width: 768px) {
+            .container {
+                margin: 30px auto;
+            }
+
+            .header {
+                padding: 40px 30px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .content {
+                padding: 40px 30px;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .section p {
+                font-size: 1rem;
+            }
+
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 20px auto;
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .section {
+                margin-bottom: 30px;
+            }
+
+            .section-title {
+                font-size: 1.2rem;
+            }
+
+            .section p {
+                font-size: 0.95rem;
+                line-height: 1.7;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+            .cta {
+                padding: 25px 20px;
+            }
+
+            .cta h3 {
+                font-size: 1.3rem;
+            }
+
+            .cta-button {
+                padding: 12px 28px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Zorin Mobile Shop</h1>
+            <p>Your Premier Destination for Quality Products</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Who We Are</h2>
+                <p>
+                    Welcome to <span class="highlight">Zorin Mobile Shop</span>, your premier destination for seamless
+                    online shopping.
+                    We are dedicated to providing the best products with a focus on dependability, customer service, and
+                    uniqueness.
+                    Our commitment to excellence has made us a trusted name in the industry.
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">2025</span>
+                    <span class="stat-label">Founded</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10K+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Satisfaction</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Our Story</h2>
+                <p>
+                    Founded in 2025, Zorin Mobile Shop has come a long way from its beginnings. When we first started
+                    out,
+                    our passion for eco-friendly cleaning products drove us to start our own business. We've grown
+                    significantly since then, expanding our product range while maintaining our commitment to
+                    sustainability
+                    and quality.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Our Mission</h2>
+                <p>
+                    We strive to make online shopping an exceptional experience for every customer. Our team works
+                    tirelessly to source the finest products, ensure quick delivery, and provide outstanding customer
+                    support. Your satisfaction is our top priority, and we're constantly innovating to serve you better.
+                </p>
+            </div>
+
+            <div class="cta">
+                <h3>Ready to Shop?</h3>
+                <p>We hope you enjoy our products as much as we enjoy offering them to you. If you have any questions or
+                    comments, please don't hesitate to reach out.</p>
+                <a href="#" class="cta-button">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

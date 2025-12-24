@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zorin Mobile Shop - Premium Mobile Phones & Accessories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #004768;
+            --primary-light: #006992;
+            --secondary-color: #00a8e8;
+            --light-color: #f8f9fa;
+            --dark-color: #333;
+            --gray-color: #6c757d;
+            --border-color: #eaeaea;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 60px 0 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Toolbar Styles */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .product-count {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+        }
+
+        .product-count strong {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+        }
+
+        .toolbar-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-color);
+            pointer-events: none;
+        }
+
+        select {
+            padding: 12px 40px 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: white;
+            font-size: 1rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            appearance: none;
+            min-width: 200px;
+            transition: var(--transition);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 168, 232, 0.1);
+        }
+
+        /* Product Grid */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow);
+        }
+
+        .product-image {
+            display: block;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f8f9fa;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin: 40px 0;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 2rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            color: var(--gray-color);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .page-header h1 {
+                font-size: 2.4rem;
+            }
+
+            .page-header p {
+                font-size: 1.1rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .toolbar-controls {
+                width: 100%;
+            }
+
+            select {
+                min-width: 100%;
+            }
+
+            .page-header {
+                padding: 40px 0 30px;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image {
+                height: 200px;
+            }
+
+            .toolbar {
+                padding: 15px;
+            }
+        }
+
+        /* Animation for product cards */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Stagger animation for product cards */
+        .product-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .product-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .product-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .product-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .product-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        .product-card:nth-child(6) {
+            animation-delay: 0.6s;
+        }
+
+        .product-card:nth-child(7) {
+            animation-delay: 0.7s;
+        }
+
+        .product-card:nth-child(8) {
+            animation-delay: 0.8s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Page Header -->
+        <header class="page-header">
+            <h1>Welcome to Zorin Mobile Shop</h1>
+            <p>The best deals on Mobile Phones & Accessories</p>
+        </header>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="product-count">
+                <strong>
+                    <%= products.length %>
+                </strong> Products Found
+            </div>
+
+            <div class="toolbar-controls">
+                <div class="select-wrapper">
+                    <select>
+                        <option>Default Sorting</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Newest First</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+
+                <div class="select-wrapper">
+                    <select>
+                        <option>Filter by Brand</option>
+                        <option>Apple</option>
+                        <option>Samsung</option>
+                        <option>Google</option>
+                    </select>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <% if (products.length> 0) { %>
+            <div class="product-grid">
+                <% for (let product of products) { %>
+                    <div class="product-card">
+                        <a href="/product/<%= product._id %>" class="product-image">
+                            <% let imgPath=product.images && product.images.length> 0 ? product.images[0] : null;
+                                // If it's a seed image filename, prepend /uploads/
+                                if (imgPath && !imgPath.startsWith('http') && !imgPath.startsWith('/')) {
+                                imgPath = '/uploads/' + imgPath;
+                                }
+                                if (!imgPath) {
+                                imgPath = 'https://via.placeholder.com/300x220/004768/ffffff?text=No+Image';
+                                }
+                                %>
+                                <img src="<%= imgPath %>" alt="<%= product.name %>">
+                        </a>
+
+                        <div class="product-info">
+                            <h5 class="product-title">
+                                <%= product.name %>
+                            </h5>
+                            <p class="product-price">Rs. <%= product.price %>
+                            </p>
+                            <a href="/product/<%= product._id %>" class="btn-primary">View Details</a>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h2>No Products Found!</h2>
+                    <p>We couldn't find any products matching your criteria. Please check back later or try different
+                        filters.</p>
+                </div>
+                <% } %>
+    </div>
+
+    <script>
+        // Add interactivity to dropdowns
+        document.addEventListener('DOMContentLoaded', function () {
+            const selects = document.querySelectorAll('select');
+
+            selects.forEach(select => {
+                select.addEventListener('change', function () {
+                    // Add your filter/sort logic here
+                    console.log('Selected:', this.value);
+                });
+            });
+
+            // Add loading animation for product cards
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach(card => {
+                card.style.opacity = '0';
+            });
+        });
+    </script>
+</body>
+
+</html>
