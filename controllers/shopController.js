@@ -162,9 +162,6 @@ const Order = require('../models/Order');
 const axios = require('axios');
 
 exports.postOrder = async (req, res) => {
-    // if (!req.session.cart || req.session.cart.items.length === 0) {
-    //     return res.redirect('/cart');
-    // }
 
     const {
         name, email, phone,
@@ -189,11 +186,16 @@ exports.postOrder = async (req, res) => {
     try {
         const savedOrder = await order.save();
         // Clear cart
-        req.session.cart = null;
+
 
         // Cashfree Integration
         const isProd = process.env.CASHFREE_ENV === 'PROD';
         const baseUrl = isProd ? 'https://api.cashfree.com/pg' : 'https://sandbox.cashfree.com/pg';
+
+        console.log(`DEBUG: postOrder Env: ${process.env.CASHFREE_ENV}, isProd: ${isProd}`);
+
+        const returnUrl = `${isProd ? 'https' : req.protocol}://${req.get('host')}/payment/status?order_id=${savedOrder._id}`;
+        console.log(`DEBUG: Generated return_url: ${returnUrl}`);
 
         const payload = {
             order_id: savedOrder._id.toString(),
@@ -209,7 +211,7 @@ exports.postOrder = async (req, res) => {
                 // We will force 'https' here. Note that on localhost without SSL, 
                 // the return redirection might fail in browser with SSL error.
                 // Use ngrok for proper testing or ignore browser SSL warning if possible.
-                return_url: `${isProd ? 'https' : req.protocol}://${req.get('host')}/payment/status?order_id={order_id}`
+                return_url: returnUrl
             }
         };
 
@@ -294,6 +296,7 @@ exports.getPaymentStatus = async (req, res) => {
 
 exports.getPaymentSuccess = async (req, res) => {
     try {
+        req.session.cart = null;
         const orderId = req.query.orderId;
         const order = await Order.findById(orderId);
         if (order) {

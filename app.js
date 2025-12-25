@@ -6,6 +6,8 @@ const connectDB = require('./config/db');
 
 // Initialize App
 const app = express();
+// Trust proxy for secure cookies and correct protocol behind reverse proxies (Heroku, Vercel, Nginx)
+app.set('trust proxy', 1);
 
 // Connect to Database
 connectDB();
