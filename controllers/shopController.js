@@ -162,9 +162,9 @@ const Order = require('../models/Order');
 const axios = require('axios');
 
 exports.postOrder = async (req, res) => {
-    if (!req.session.cart || req.session.cart.items.length === 0) {
-        return res.redirect('/cart');
-    }
+    // if (!req.session.cart || req.session.cart.items.length === 0) {
+    //     return res.redirect('/cart');
+    // }
 
     const {
         name, email, phone,
