@@ -186,7 +186,7 @@ exports.postOrder = async (req, res) => {
     try {
         const savedOrder = await order.save();
         // Clear cart
-
+        req.session.cart = null;
 
         // Cashfree Integration
         const isProd = process.env.CASHFREE_ENV === 'PROD';
@@ -297,7 +297,7 @@ exports.getPaymentStatus = async (req, res) => {
 
 exports.getPaymentSuccess = async (req, res) => {
     try {
-        req.session.cart = null;
+
         const orderId = req.query.orderId;
         const order = await Order.findById(orderId);
         if (order) {
