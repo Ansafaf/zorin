@@ -193,7 +193,7 @@ exports.postOrder = async (req, res) => {
         const baseUrl = isProd ? 'https://api.cashfree.com/pg' : 'https://sandbox.cashfree.com/pg';
 
         console.log(`DEBUG: postOrder Env: ${process.env.CASHFREE_ENV}, isProd: ${isProd}`);
-        console.log(`DEBUG: Timestamp: ${new Date().toISOString()}`);
+        console.log(`DEBUG: Timestamp: ${new Date().toISOString()} - Payment Updated`);
 
         const returnUrl = `${isProd ? 'https' : req.protocol}://${req.get('host')}/payment/status?order_id=${savedOrder._id}`;
         console.log(`DEBUG: Generated return_url: ${returnUrl}`);
